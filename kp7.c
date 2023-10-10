@@ -39,7 +39,7 @@ void PrintUsualMatrix(int matr[], int maxNumOfElem, int numOfColumns) {
             }
             if (matr[i+1] == 0) {
                 for (int j = lastValue + 1; j <= numOfColumns; ++j) {
-                    printf("%c ", '0'); 
+                    printf("%5c", '0'); 
                     count++;
                 }
                 printf("%c", '\n');
@@ -47,13 +47,13 @@ void PrintUsualMatrix(int matr[], int maxNumOfElem, int numOfColumns) {
             }
             if (matr[i+2] == 0) {
                 for (int j = lastValue + 1; j <= numOfColumns; ++j) {
-                    printf("%c ", '0');
+                    printf("%c", '0');
                     count++;
                 }
                 printf("%c", '\n');
                 lastValue = 0;
                 for (int j = 1; j <= numOfColumns; ++j) {
-                    printf("%c ", '0');
+                    printf("%5c", '0');
                     count++;
                 }
                 printf("%c", '\n');
@@ -62,7 +62,7 @@ void PrintUsualMatrix(int matr[], int maxNumOfElem, int numOfColumns) {
             }
             else {
                 for (int j = lastValue + 1; j <= numOfColumns; ++j) {
-                    printf("%c ", '0');
+                    printf("%5c", '0');
                     count++;
                 }
                 printf("%c", '\n');
@@ -72,10 +72,10 @@ void PrintUsualMatrix(int matr[], int maxNumOfElem, int numOfColumns) {
         }
         else {
             for (int j = lastValue + 1; j < matr[i]; ++j) {
-                    printf("%c ", '0');
+                    printf("%5c", '0');
                     count++;
             }
-            printf("%d ", matr[i+1]);
+            printf("%5d", matr[i+1]);
             lastValue = matr[i];
             count++;
             i++;
@@ -89,20 +89,19 @@ int main() {
     int matr[500] = {0};
     char line[MAX_LINE] = {' '};
     int matrInd = 0;
-    FILE* f = fopen("C:\\Users\\asus\\Desktop\\Labs\\matrix_for_kp7.txt", "r");
+    FILE* f = fopen("matrix_for_kp7.txt", "r");
     int m, n;
     fgets(line, MAX_LINE, f);
     m = atoi(&line[0]);
     n = atoi(&line[2]);
     for (int i = 1; i <= m; ++i) {
         fgets(line, MAX_LINE, f);
-        if (line == NULL) { break; }
         ++matrInd;
         matr[matrInd] = i;
         ++matrInd;
         column = 0;
         for (int j = 0; j < n*2; ++j) {
-            if (line[j] == '\n' || line[j+1] == EOF) { break; }
+            if (line[j] == '\n') { break; }
             if (line[j] != ' ') {
                 if (column == n) {
                     break;
