@@ -190,11 +190,8 @@ void DelEveryN(LinBidList* list, const int k, int index) {
     DelEveryN(list, k, index);
 }
 
-void PrintLinBidList(LinBidList list) {
-    printf("\n");
-    GoToBeginning(&list);
-    while (list.head->next != list.right) {
-        switch (list.head->value) {
+void PrintSwitch(char elem) {
+    switch (elem) {
             case asteroid :
                 printf("asteroid  ");
                 break;
@@ -216,29 +213,14 @@ void PrintLinBidList(LinBidList list) {
             default :
                 break;
         }
+}
+
+void PrintLinBidList(LinBidList list) {
+    printf("\n");
+    GoToBeginning(&list);
+    while (list.head->next != list.right->next) {
+        PrintSwitch(list.head->value);
         list.head = list.head->next;
-    }
-    switch (list.head->value) {
-        case asteroid :
-            printf("asteroid  ");
-            break;
-        case blackHole :
-            printf("blackHole  ");
-            break;
-        case comet :
-            printf("comet  ");
-            break;
-        case nebula :
-            printf("nebula  ");
-            break;
-        case pulsar :
-            printf("pulsar  ");
-            break;
-        case quasar :
-            printf("quasar  ");
-            break;
-        default :
-            break;
     }
     printf("\n");
     return;
@@ -247,7 +229,7 @@ void PrintLinBidList(LinBidList list) {
 int main() {
     LinBidList list = CreateLinBidList();
     printf("print number of elements->  ");
-    int num;
+    int num, len;
     scanf("%d", &num);
     printf("\nprint a for asteroid\nprint b for black hole\
     \nprint c for comet\nprint n for nebula\
@@ -255,7 +237,7 @@ int main() {
     char elem;
     cosmos* arrayPtr = malloc(num * sizeof(cosmos));
     for (int i = 0; i < num; ++i) {
-        printf("element %d ->  ", i+1);
+        printf("element %d ->  ", i);
         scanf("%c", &elem);
         if (elem == '\n') {
             scanf("%c", &elem);
@@ -286,20 +268,25 @@ int main() {
                 *(arrayPtr + i) = quasar;
                 break;
             default:
-                printf("\nwrong value\n");
+                printf("\nWRONG VALUE\n");
+                exit(-1);
                 break;
         }
     }
     PrintLinBidList(list);
-    printf("\nlength of the list -> %d\n", Length(list));
-    printf("print the index of new the value ->  ");
+    len = Length(list);
+    printf("\nlength of the list -> %d\n", len);
+    printf("\nprint the index of new the value from 0 to %d ->  ", len);
     int ind;
     scanf("%d", &ind);
-    printf("\nprint a for asteroid\
-    \nprint b for black hole\nprint c for comet\nprint n for nebula\nprint p for pulsar\
-    \nprint q for quasar\n\nnew element ->  ");
-    scanf("\n%c", &elem);
-    if (ind <= Length(list)) {
+    if (ind > len || ind < 0) {
+        printf("\nWRONG INDEX\n");
+    }
+    else {
+        printf("\nprint a for asteroid\
+        \nprint b for black hole\nprint c for comet\nprint n for nebula\nprint p for pulsar\
+        \nprint q for quasar\n\nnew element ->  ");
+        scanf("\n%c", &elem);
         switch (elem) {
             case 'a' :
                 InsertByIndex(list, ind, asteroid);
@@ -320,33 +307,32 @@ int main() {
                 InsertByIndex(list, ind, quasar);
                 break;
             default:
-                printf("\nwrong value\n\n");
+                printf("\nWRONG VALUE\n\n");
                 break;
         }
         PrintLinBidList(list);
     }
-    else {
-        printf("\nwrong index\n");
-    }
-    printf("\nlength of the list -> %d\n", Length(list));
-    printf("\nprint the index to delete the value->  ");
+    len = Length(list);
+    printf("\nlength of the list -> %d\n", len);
+    printf("\nprint the index to delete the value from 0 to %d ->  ", len - 1);
     scanf("%d", &ind);
-    if (ind < Length(list)) {
+    if (ind < len && ind >= 0) {
         DelElemByIndex(&list, ind);
         PrintLinBidList(list);
     }
     else {
-        printf("\nwrong index\n");
+        printf("\nWRONG INDEX\n");
     }
-    printf("\nlength of the list -> %d\n\n", Length(list));
+    len = Length(list);
+    printf("\nlength of the list -> %d\n", len);
     printf("\nprint the number k to delete every k element->  ");
     scanf("%d", &ind);
-    if (ind > Length(list) || ind < 1) {
-        printf("\nwrong number\n");
+    if (ind > len || ind < 1) {
+        printf("\nWRONG NUMBER\n");
     }
     else if (ind == 1) {
         RemoveAllList(&list);
-        printf("\nall list was deleted\n");
+        printf("\nALL LIST WAS DELETED\n");
         return 0;
     }
     else { 
@@ -354,31 +340,11 @@ int main() {
         DelEveryN(&list, ind, 1);
         PrintLinBidList(list);
     }
-    printf("\nlength of the list -> %d\n\n", Length(list));
-    printf("array of elements from start\n");
+    len = Length(list);
+    printf("\nlength of the list -> %d\n\n", len);
+    printf("START ARRAY\n");
     for (int i = 0; i < num; ++i) {
-        switch (*(arrayPtr + i)) {
-            case asteroid :
-                printf("asteroid  ");
-                break;
-            case blackHole :
-                printf("blackHole  ");
-                break;
-            case comet :
-                printf("comet  ");
-                break;
-            case nebula :
-                printf("nebula  ");
-                break;
-            case pulsar :
-                printf("pulsar  ");
-                break;
-            case quasar :
-                printf("quasar  ");
-                break;
-            default :
-                break;
-        }
+        PrintSwitch(*(arrayPtr + i));
     }
     return 0;
 }
