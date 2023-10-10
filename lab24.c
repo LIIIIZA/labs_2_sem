@@ -15,8 +15,9 @@ typedef struct {
 
 Queue* Queue_create() {
     Queue* q = malloc(sizeof(Queue));
-    q->first = q->last;
+    q->first = q->last = 0;
     q->size = 0;
+    return q;
 }
 
 void Queue_push(Queue* q, char elem) {
@@ -159,11 +160,10 @@ void Node_tree_delete(Node_tree* root) {
     } 
     Node_tree_delete(root->left);
     Node_tree_delete(root->right);
-    printf("\n Deleting node: %c", root->value);
     free(root);
 } 
 
-Node_tree* Node_tree_print(Node_tree* root, int level) {
+void Node_tree_print(Node_tree* root, int level) {
     if (root) {
         for (int i = level; i > 0; --i) {
             printf("%c", ' ');
@@ -172,6 +172,19 @@ Node_tree* Node_tree_print(Node_tree* root, int level) {
         Node_tree_print(root->left, level + 3);
         Node_tree_print(root->right, level + 3);
     }
+}
+
+
+bool IsOperand(char elem) {
+    return (elem >= 'a' && elem <= 'z') || (elem >= 'A' && elem <= 'Z') || (elem >= '0' && elem <= '9');
+}
+
+bool IsOperator(char elem) {
+    return (elem == '+') || (elem == '*') || (elem == '-') || (elem == '/') || (elem == '^');
+}
+
+bool IsOperatorWithoutMulti(char elem) {
+    return (elem == '+') || (elem == '-') || (elem == '/') || (elem == '^');
 }
 
 int Priority(char operator) {
@@ -201,16 +214,19 @@ int Priority(char operator) {
     return -1;
 }
 
-bool IsOperand(char elem) {
-    return (elem >= 'a' && elem <= 'z') || (elem >= 'A' && elem <= 'Z') || (elem >= '0' && elem <= '9');
-}
-
-bool IsOperator(char elem) {
-    return (elem == '+') || (elem == '*') || (elem == '-') || (elem == '/') || (elem == '^');
-}
-
-bool IsOperatorWithoutMulti(char elem) {
-    return (elem == '+') || (elem == '-') || (elem == '/') || (elem == '^');
+void Node_tree_print_in_order(Node_tree* root, Node_tree* parent) {
+    if (root == NULL) {
+        return;
+    }
+    if (IsOperator(root->value) && (Priority(root->value) < Priority(parent->value))) {
+        printf("(");
+    }
+    Node_tree_print_in_order(root->left, root);
+    printf("%c", root->value);
+    Node_tree_print_in_order(root->right, root);
+    if (IsOperator(root->value) && (Priority(root->value) < Priority(parent->value))) {
+        printf(")");
+    }
 }
 
 void Dijkstra(Queue* qin, Queue* qout, Stack* s) {
@@ -417,8 +433,6 @@ int main() {
     Stack* s = Stack_create();
     char elem;
     int sizeQout;
-    Queue_create(qin);
-    Queue_create(qout);
     printf("print a mathematical expression without spaces\n->  ");
     scanf("%c", &elem);
     while (elem != '\n') {
@@ -445,6 +459,9 @@ int main() {
     Queue_destroy(qin);
     Queue_destroy(qout);
     Stack_destoy(s);
+    printf("OR\n");
+    Node_tree* forPrint = Node_tree_create('+');
+    Node_tree_print_in_order(DTree, forPrint);
     Node_tree_delete(DTree);
     return 0;
 }
