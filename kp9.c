@@ -48,10 +48,48 @@ void ShakerSort(Table* t, int size) {
     
 }
 
+int BinarySearchAllKeys(int ind, int key, Table* t, int size, int keyArray[]) {
+    keyArray[0] = ind;
+    int arrayIndex = 1;
+    for (int i = ind - 1; i >= 0; --i) {
+        if (t[i].key == key) {
+            keyArray[arrayIndex] = i;
+            ++arrayIndex;
+        }
+        else {
+            break;
+        }
+    }
+    for (int i = ind + 1; i < size; ++i) {
+        if (t[i].key == key) {
+            keyArray[arrayIndex] = i;
+            ++arrayIndex;
+        }
+        else {
+            break;
+        }
+    }
+    return arrayIndex;
+}
+
+int BinarySearchFirstKey(Table* t, int key, int left, int right) {
+    int middle = (left + right) / 2;
+    if (key == t[middle].key) {
+        return middle;
+    }
+    if (left >= right) {
+        return (key == t[left].key) ? left : -1;
+    }    
+    if (key > t[middle].key) {
+        return BinarySearchFirstKey(t, key, middle + 1, right);
+    }
+    return BinarySearchFirstKey(t, key, left, middle - 1);
+}
+
 int BinarySearch(Table* t, int key, int left, int right) {
     int middle = (left + right) / 2;
     if (key == t[middle].key) {
-        return middle + 1;
+        return middle;
     }
     if (left >= right) {
         return (key > t[left].key) ? (left + 1) : left;
@@ -78,9 +116,13 @@ void InsertionSort(Table* t, int size) {
 }
 
 int main(void) {
-    int size, value, key;
+    int size, value, key, firstIndexForKey, keysQuantity;
     printf("print the number of elements ->  ");
     scanf("%d", &size);
+    if (size < 1) {
+        exit(-1);
+    }
+    int searchKey[size];
     Table tableForShakerSort[size];
     Table tableForBinaryInsertion[size];
     for (int i = 0; i < size; ++i) {
@@ -104,7 +146,19 @@ int main(void) {
     TablePrint(tableForBinaryInsertion, size);
     printf("\nprint key to find value -> ");
     scanf("%d", &key);
-    value = tableForShakerSort[BinarySearch(tableForShakerSort,key,0,size-1)-1].value;
-    printf("value -> %d", value);
+    firstIndexForKey = BinarySearchFirstKey(tableForShakerSort, key, 0, size-1);
+    if (firstIndexForKey == -1) {
+        do {
+            printf("wrong key");
+            printf("\nprint key to find value -> ");
+            scanf("%d", &key);
+            firstIndexForKey = BinarySearchFirstKey(tableForShakerSort, key, 0, size-1);
+        }
+        while (firstIndexForKey == -1);
+    }
+    keysQuantity = BinarySearchAllKeys(firstIndexForKey, key, tableForShakerSort, size, searchKey);
+    for (int i = 0; i < keysQuantity; ++i) {
+        printf("%d\n", tableForShakerSort[searchKey[i]].value);
+    }
     return 0;
 }
