@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
 #define MAX_LINE_LEN 250
 #define NUMBER_OF_STUDENTS 20
@@ -32,7 +31,6 @@ void InsertSort(person p[], int n) {
 int main() {
     person p[NUMBER_OF_STUDENTS];
     char line[MAX_LINE_LEN];
-    char filename[] = "C:\\Users\\asus\\Desktop\\Labs\\info.csv";
     int rank;
     printf("How much students do you need?\nPrint a number from 1 to 20 ->  ");
     scanf("%d", &rank);
@@ -41,8 +39,8 @@ int main() {
         return -1;
     }
     float aver;
-    FILE* file_write = fopen("C:\\Users\\asus\\Desktop\\Labs\\file_for_kp6.txt", "w");
-    FILE* students = fopen(filename, "r");
+    FILE* file_write = fopen("file_for_kp6.txt", "w");
+    FILE* students = fopen("info.csv", "r");
     if (!file_write) {
         perror("Can't open file to write");
         return 1;
@@ -51,7 +49,6 @@ int main() {
         perror("Can't open a file to read");
         return 1;
     }
-
     fgets(line, MAX_LINE_LEN, students);
     char inf[MAX_LINE_LEN];
     int indP, indLine;
